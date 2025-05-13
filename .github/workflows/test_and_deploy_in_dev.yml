@@ -33,31 +33,6 @@ jobs:
       - name: Validate Terraform formatting
         run: terraform fmt -recursive -check
 
-  # Apply Terraform configuration to dev environment
-  deploy-to-dev:
-    needs: validate-terraform-configuration
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - uses: actions/checkout@v3
-      
-      # Install Terraform CLI
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.2
-
-      - name: Prepare Terraform working directory
-        run: terraform init
-
-      - name: Create Terraform-managed infrastructure
-        run: terraform apply -auto-approve
-        # Set Terraform environment variables from GitHub Secrets
-        env:
-          TF_VAR_SUMOLOGIC_ACCESSID: ${{ vars.SUMOLOGIC_ACCESSID_DEV }}
-          TF_VAR_SUMOLOGIC_ACCESSKEY: ${{ secrets.SUMOLOGIC_ACCESSKEY_DEV }}
-          TF_VAR_TINES_WEBHOOK_URL_FOR_SUMOLOGIC_ALERTS: ${{ secrets.TINES_WEBHOOK_URL_FOR_SUMOLOGIC_ALERTS }}
-
   # Trigger detection rules in dev environment
   trigger-detections-in-dev:
     needs: deploy-to-dev
