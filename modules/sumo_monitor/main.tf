@@ -17,7 +17,7 @@ resource "sumologic_monitor" "alert" {
   type                      = "MonitorsLibraryMonitor"
   parent_id                 = var.standard_folder
   is_disabled               = false
-  notification_group_fields = ["_messageid"]
+  notification_group_fields = ["_sourceHost"]
   content_type              = "Monitor"
   # Monitor type is logs query monitor.
   monitor_type = "Logs"
